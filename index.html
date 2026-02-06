@@ -745,7 +745,7 @@
                     Vista previa del proyecto
                 </h2>
                 
-                <div class="preview-container">
+                <div id="preview-container" class="preview-container">
                     <div id="preview-placeholder" class="preview-placeholder">
                         <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
@@ -811,29 +811,51 @@
             currentTab: 'file-tab'
         };
 
-        // Elementos del DOM
-        const elements = {
-            tabs: document.querySelectorAll('.tab'),
-            tabContents: document.querySelectorAll('.tab-content'),
-            fileInput: document.getElementById('json-file'),
-            fileDropArea: document.getElementById('file-drop-area'),
-            fileSelectedInfo: document.getElementById('file-selected-info'),
-            selectedFileName: document.getElementById('selected-file-name'),
-            selectedFileSize: document.getElementById('selected-file-size'),
-            jsonEditor: document.getElementById('json-editor'),
-            validateJsonBtn: document.getElementById('validate-json-btn'),
-            loadExampleBtn: document.getElementById('load-example-btn'),
-            generateBtn: document.getElementById('generate-btn'),
-            previewPlaceholder: document.getElementById('preview-placeholder'),
-            previewContent: document.getElementById('preview-content'),
-            fileTree: document.getElementById('file-tree'),
-            fileCount: document.getElementById('file-count'),
-            projectTitle: document.getElementById('project-title'),
-            previewToggleBtn: document.getElementById('preview-toggle-btn'),
-            downloadBtn: document.getElementById('download-btn'),
-            messageContainer: document.getElementById('message-container'),
-            exampleItems: document.querySelectorAll('.example-item')
-        };
+        // Elementos del DOM - Con verificación segura
+        let elements = {};
+
+        // Función para obtener elementos del DOM de forma segura
+        function getElements() {
+            return {
+                // Tabs
+                tabs: document.querySelectorAll('.tab'),
+                tabContents: document.querySelectorAll('.tab-content'),
+                
+                // Entrada de archivos
+                fileInput: document.getElementById('json-file'),
+                fileDropArea: document.getElementById('file-drop-area'),
+                fileSelectedInfo: document.getElementById('file-selected-info'),
+                selectedFileName: document.getElementById('selected-file-name'),
+                selectedFileSize: document.getElementById('selected-file-size'),
+                
+                // Editor JSON
+                jsonEditor: document.getElementById('json-editor'),
+                validateJsonBtn: document.getElementById('validate-json-btn'),
+                loadExampleBtn: document.getElementById('load-example-btn'),
+                
+                // Botones principales
+                generateBtn: document.getElementById('generate-btn'),
+                
+                // Vista previa
+                previewContainer: document.getElementById('preview-container'),
+                previewPlaceholder: document.getElementById('preview-placeholder'),
+                previewContent: document.getElementById('preview-content'),
+                fileTree: document.getElementById('file-tree'),
+                fileCount: document.getElementById('file-count'),
+                projectTitle: document.getElementById('project-title'),
+                previewToggleBtn: document.getElementById('preview-toggle-btn'),
+                downloadBtn: document.getElementById('download-btn'),
+                
+                // Mensajes y ejemplos
+                messageContainer: document.getElementById('message-container'),
+                exampleItems: document.querySelectorAll('.example-item')
+            };
+        }
+
+        // Verificar si un elemento existe
+        function elementExists(element) {
+            return element !== null && element !== undefined;
+        }
 
         // Ejemplos de estructuras JSON
         const examples = {
@@ -1026,39 +1048,74 @@
         });
 
         function initApp() {
+            // Inicializar elementos
+            elements = getElements();
+            
+            // Verificar elementos críticos
+            if (!elementExists(elements.generateBtn)) {
+                console.error("Elemento crítico 'generateBtn' no encontrado");
+                return;
+            }
+            
             // Establecer año actual en el footer
-            document.getElementById('current-year').textContent = new Date().getFullYear();
+            const yearElement = document.getElementById('current-year');
+            if (yearElement) {
+                yearElement.textContent = new Date().getFullYear();
+            }
             
             // Configurar tabs
-            elements.tabs.forEach(tab => {
-                tab.addEventListener('click', function() {
-                    const tabId = this.getAttribute('data-tab');
-                    switchTab(tabId);
+            if (elements.tabs) {
+                elements.tabs.forEach(tab => {
+                    tab.addEventListener('click', function() {
+                        const tabId = this.getAttribute('data-tab');
+                        switchTab(tabId);
+                    });
                 });
-            });
+            }
             
             // Configurar event listeners para archivos
-            elements.fileInput.addEventListener('change', handleFileSelect);
-            elements.fileDropArea.addEventListener('dragover', handleDragOver);
-            elements.fileDropArea.addEventListener('dragleave', handleDragLeave);
-            elements.fileDropArea.addEventListener('drop', handleFileDrop);
+            if (elements.fileInput) {
+                elements.fileInput.addEventListener('change', handleFileSelect);
+            }
+            
+            if (elements.fileDropArea) {
+                elements.fileDropArea.addEventListener('dragover', handleDragOver);
+                elements.fileDropArea.addEventListener('dragleave', handleDragLeave);
+                elements.fileDropArea.addEventListener('drop', handleFileDrop);
+            }
             
             // Configurar event listeners para el editor
-            elements.validateJsonBtn.addEventListener('click', validateJson);
-            elements.loadExampleBtn.addEventListener('click', loadExample);
-            elements.generateBtn.addEventListener('click', generateStructure);
-            elements.previewToggleBtn.addEventListener('click', togglePreview);
-            elements.downloadBtn.addEventListener('click', downloadZip);
+            if (elements.validateJsonBtn) {
+                elements.validateJsonBtn.addEventListener('click', validateJson);
+            }
+            
+            if (elements.loadExampleBtn) {
+                elements.loadExampleBtn.addEventListener('click', loadExample);
+            }
+            
+            if (elements.generateBtn) {
+                elements.generateBtn.addEventListener('click', generateStructure);
+            }
+            
+            if (elements.previewToggleBtn) {
+                elements.previewToggleBtn.addEventListener('click', togglePreview);
+            }
+            
+            if (elements.downloadBtn) {
+                elements.downloadBtn.addEventListener('click', downloadZip);
+            }
             
             // Configurar ejemplos
-            elements.exampleItems.forEach(item => {
-                item.addEventListener('click', function() {
-                    const exampleType = this.getAttribute('data-example');
-                    loadExample(exampleType);
-                    switchTab('editor-tab');
-                    showMessage(`Ejemplo "${exampleType}" cargado en el editor.`, 'info');
+            if (elements.exampleItems) {
+                elements.exampleItems.forEach(item => {
+                    item.addEventListener('click', function() {
+                        const exampleType = this.getAttribute('data-example');
+                        loadExample(exampleType);
+                        switchTab('editor-tab');
+                        showMessage(`Ejemplo "${exampleType}" cargado en el editor.`, 'info');
+                    });
                 });
-            });
+            }
             
             // Estado inicial
             updateGenerateButton();
@@ -1067,22 +1124,26 @@
         // Funciones de tabs
         function switchTab(tabId) {
             // Actualizar tabs
-            elements.tabs.forEach(tab => {
-                if (tab.getAttribute('data-tab') === tabId) {
-                    tab.classList.add('active');
-                } else {
-                    tab.classList.remove('active');
-                }
-            });
+            if (elements.tabs) {
+                elements.tabs.forEach(tab => {
+                    if (tab.getAttribute('data-tab') === tabId) {
+                        tab.classList.add('active');
+                    } else {
+                        tab.classList.remove('active');
+                    }
+                });
+            }
             
             // Mostrar contenido del tab
-            elements.tabContents.forEach(content => {
-                if (content.id === tabId) {
-                    content.classList.add('active');
-                } else {
-                    content.classList.remove('active');
-                }
-            });
+            if (elements.tabContents) {
+                elements.tabContents.forEach(content => {
+                    if (content.id === tabId) {
+                        content.classList.add('active');
+                    } else {
+                        content.classList.remove('active');
+                    }
+                });
+            }
             
             state.currentTab = tabId;
             updateGenerateButton();
@@ -1098,21 +1159,29 @@
 
         function handleDragOver(event) {
             event.preventDefault();
-            elements.fileDropArea.classList.add('drag-over');
+            if (elements.fileDropArea) {
+                elements.fileDropArea.classList.add('drag-over');
+            }
         }
 
         function handleDragLeave(event) {
             event.preventDefault();
-            elements.fileDropArea.classList.remove('drag-over');
+            if (elements.fileDropArea) {
+                elements.fileDropArea.classList.remove('drag-over');
+            }
         }
 
         function handleFileDrop(event) {
             event.preventDefault();
-            elements.fileDropArea.classList.remove('drag-over');
+            if (elements.fileDropArea) {
+                elements.fileDropArea.classList.remove('drag-over');
+            }
             
             const file = event.dataTransfer.files[0];
             if (file && file.type === 'application/json') {
-                elements.fileInput.files = event.dataTransfer.files;
+                if (elements.fileInput) {
+                    elements.fileInput.files = event.dataTransfer.files;
+                }
                 processFile(file);
             } else {
                 showMessage('Por favor, sube solo archivos JSON.', 'error');
@@ -1126,9 +1195,11 @@
             }
             
             // Mostrar información del archivo
-            elements.selectedFileName.textContent = file.name;
-            elements.selectedFileSize.textContent = formatFileSize(file.size);
-            elements.fileSelectedInfo.classList.remove('hidden');
+            if (elements.selectedFileName && elements.selectedFileSize && elements.fileSelectedInfo) {
+                elements.selectedFileName.textContent = file.name;
+                elements.selectedFileSize.textContent = formatFileSize(file.size);
+                elements.fileSelectedInfo.classList.remove('hidden');
+            }
             
             // Leer el archivo
             const reader = new FileReader();
@@ -1162,6 +1233,8 @@
         // Funciones del editor JSON
         function validateJson() {
             try {
+                if (!elements.jsonEditor) return;
+                
                 const jsonText = elements.jsonEditor.value.trim();
                 if (!jsonText) {
                     showMessage('El editor JSON está vacío.', 'error');
@@ -1186,7 +1259,7 @@
                 exampleType = 'react';
             }
             
-            if (examples[exampleType]) {
+            if (examples[exampleType] && elements.jsonEditor) {
                 elements.jsonEditor.value = JSON.stringify(examples[exampleType], null, 2);
                 state.jsonData = examples[exampleType];
                 showMessage(`Ejemplo "${exampleType}" cargado.`, 'info');
@@ -1243,20 +1316,26 @@
             } else if (state.currentTab === 'editor-tab') {
                 // Intentar parsear el JSON del editor
                 try {
-                    const jsonText = elements.jsonEditor.value.trim();
-                    if (jsonText) {
-                        JSON.parse(jsonText);
-                        isValid = true;
+                    if (elements.jsonEditor) {
+                        const jsonText = elements.jsonEditor.value.trim();
+                        if (jsonText) {
+                            JSON.parse(jsonText);
+                            isValid = true;
+                        }
                     }
                 } catch (e) {
                     isValid = false;
                 }
             }
             
-            elements.generateBtn.disabled = !isValid;
+            if (elements.generateBtn) {
+                elements.generateBtn.disabled = !isValid;
+            }
         }
 
         function showMessage(text, type = 'info') {
+            if (!elements.messageContainer) return;
+            
             // Eliminar mensajes anteriores
             while (elements.messageContainer.firstChild) {
                 elements.messageContainer.removeChild(elements.messageContainer.firstChild);
@@ -1310,6 +1389,11 @@
                     }
                     jsonData = state.jsonData;
                 } else if (state.currentTab === 'editor-tab') {
+                    if (!elements.jsonEditor) {
+                        showMessage('Editor JSON no disponible.', 'error');
+                        return;
+                    }
+                    
                     const jsonText = elements.jsonEditor.value.trim();
                     if (!jsonText) {
                         showMessage('El editor JSON está vacío.', 'error');
@@ -1320,8 +1404,10 @@
                 }
                 
                 // Mostrar estado de carga
-                elements.generateBtn.innerHTML = '<div class="loading"></div> Generando...';
-                elements.generateBtn.disabled = true;
+                if (elements.generateBtn) {
+                    elements.generateBtn.innerHTML = '<div class="loading"></div> Generando...';
+                    elements.generateBtn.disabled = true;
+                }
                 
                 showMessage('Generando estructura del proyecto...', 'info');
                 
@@ -1336,31 +1422,45 @@
                 showMessage(`Error: ${error.message || 'No se pudo generar la estructura.'}`, 'error');
             } finally {
                 // Restaurar botón
-                elements.generateBtn.innerHTML = `
-                    <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                        <polyline points="7 10 12 15 17 10"></polyline>
-                        <line x1="12" y1="15" x2="12" y2="3"></line>
-                    </svg>
-                    Generar estructura
-                `;
-                elements.generateBtn.disabled = false;
+                if (elements.generateBtn) {
+                    elements.generateBtn.innerHTML = `
+                        <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg>
+                        Generar estructura
+                    `;
+                    elements.generateBtn.disabled = false;
+                }
                 updateGenerateButton();
             }
         }
 
         function renderFileTree(structure) {
-            elements.fileTree.innerHTML = '';
-            elements.previewPlaceholder.classList.add('hidden');
-            elements.previewContent.classList.remove('hidden');
+            if (elements.fileTree) {
+                elements.fileTree.innerHTML = '';
+            }
+            
+            if (elements.previewPlaceholder) {
+                elements.previewPlaceholder.classList.add('hidden');
+            }
+            
+            if (elements.previewContent) {
+                elements.previewContent.classList.remove('hidden');
+            }
             
             // Actualizar título del proyecto
-            elements.projectTitle.textContent = `Proyecto: ${structure.projectName}`;
+            if (elements.projectTitle) {
+                elements.projectTitle.textContent = `Proyecto: ${structure.projectName}`;
+            }
             
             let fileCount = 0;
             
             // Función recursiva para renderizar elementos
             function renderItems(items, indent = 0) {
+                if (!elements.fileTree) return;
+                
                 items.forEach(item => {
                     const div = document.createElement('div');
                     div.className = `tree-item ${item.type}`;
@@ -1393,21 +1493,32 @@
                 });
             }
             
-            renderItems(structure.files);
+            if (elements.fileTree) {
+                renderItems(structure.files);
+            }
             
             // Actualizar contador
-            elements.fileCount.textContent = `${fileCount} archivos`;
+            if (elements.fileCount) {
+                elements.fileCount.textContent = `${fileCount} archivos`;
+            }
             
-            // Asegurar que la vista previa sea visible
+            // Asegurar que la vista previa sea visible (con verificación)
             state.isPreviewVisible = true;
-            elements.previewContainer.style.maxHeight = '400px';
+            if (elements.previewContainer && elements.previewContainer.style) {
+                elements.previewContainer.style.maxHeight = '400px';
+            }
         }
 
         function togglePreview() {
             state.isPreviewVisible = !state.isPreviewVisible;
             
+            // Verificar si el elemento existe antes de manipularlo
+            if (!elements.previewContainer || !elements.previewToggleBtn) return;
+            
             if (state.isPreviewVisible) {
-                elements.previewContainer.style.maxHeight = '400px';
+                if (elements.previewContainer.style) {
+                    elements.previewContainer.style.maxHeight = '400px';
+                }
                 elements.previewToggleBtn.innerHTML = `
                     <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
@@ -1416,7 +1527,9 @@
                     Ocultar vista previa
                 `;
             } else {
-                elements.previewContainer.style.maxHeight = '0';
+                if (elements.previewContainer.style) {
+                    elements.previewContainer.style.maxHeight = '0';
+                }
                 elements.previewToggleBtn.innerHTML = `
                     <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
@@ -1428,8 +1541,12 @@
         }
 
         function enableDownload() {
-            elements.downloadBtn.disabled = false;
-            elements.previewToggleBtn.disabled = false;
+            if (elements.downloadBtn) {
+                elements.downloadBtn.disabled = false;
+            }
+            if (elements.previewToggleBtn) {
+                elements.previewToggleBtn.disabled = false;
+            }
         }
 
         function downloadZip() {
