@@ -476,10 +476,134 @@
             color: var(--text-secondary);
             text-decoration: none;
             transition: color 0.2s;
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
         }
 
         .footer-link:hover {
             color: var(--primary-color);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background-color: var(--bg-white);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            animation: modalFadeIn 0.3s ease;
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--text-light);
+            cursor: pointer;
+            line-height: 1;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius);
+        }
+
+        .modal-close:hover {
+            background-color: var(--bg-gray);
+            color: var(--text-primary);
+        }
+
+        .modal-body {
+            padding: 24px;
+        }
+
+        .modal-text {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .modal-list {
+            margin: 16px 0;
+            padding-left: 20px;
+        }
+
+        .modal-list li {
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+        }
+
+        .contact-info {
+            margin-top: 24px;
+            padding: 20px;
+            background-color: var(--bg-gray);
+            border-radius: var(--radius);
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .contact-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .contact-email {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .contact-email:hover {
+            text-decoration: underline;
         }
 
         /* Responsive */
@@ -512,6 +636,16 @@
             .json-editor-actions {
                 width: 100%;
                 justify-content: space-between;
+            }
+            
+            .footer-links {
+                flex-direction: column;
+                gap: 12px;
+            }
+            
+            .modal-content {
+                width: 95%;
+                max-height: 90vh;
             }
         }
 
@@ -708,7 +842,7 @@
     {
       "name": "README",
       "type": "file",
-      "extension": ".md"
+          "extension": ".md"
     }
   ]
 }'></textarea>
@@ -793,14 +927,144 @@
     <!-- Footer -->
     <footer>
         <div class="container">
-            <div>Generator Structure &copy; <span id="current-year">2023</span></div>
+            <div>Generator Structure &copy; <span id="current-year">2023</span> - Todas las funcionalidades funcionan 100% en el navegador</div>
             <div class="footer-links">
-                <a href="#" class="footer-link">Privacidad</a>
-                <a href="#" class="footer-link">Términos</a>
-                <a href="#" class="footer-link">Soporte</a>
+                <button class="footer-link" id="privacy-link">Privacidad</button>
+                <button class="footer-link" id="terms-link">Términos</button>
+                <a href="mailto:vertiljivenson9@gmail.com?subject=Soporte%20Generator%20Structure&body=Hola,%20me%20gustaría%20contactarte%20sobre%20Generator%20Structure" class="footer-link">Soporte</a>
             </div>
         </div>
     </footer>
+
+    <!-- Modal de Privacidad -->
+    <div id="privacy-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Política de Privacidad</h2>
+                <button class="modal-close" id="privacy-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p class="modal-text">
+                    Esta Política de Privacidad describe cómo Generator Structure recopila, utiliza y protege tu información cuando utilizas nuestra aplicación web.
+                </p>
+                
+                <h3 class="modal-title" style="font-size: 18px; margin-top: 20px;">Recopilación de Información</h3>
+                <p class="modal-text">
+                    Generator Structure está diseñada para funcionar completamente en tu navegador. No recopilamos, almacenamos ni transmitimos ninguna información personal:
+                </p>
+                <ul class="modal-list">
+                    <li>No almacenamos datos en servidores externos</li>
+                    <li>Todo el procesamiento ocurre localmente en tu dispositivo</li>
+                    <li>No utilizamos cookies de seguimiento</li>
+                    <li>No compartimos información con terceros</li>
+                </ul>
+                
+                <h3 class="modal-title" style="font-size: 18px; margin-top: 20px;">Archivos JSON</h3>
+                <p class="modal-text">
+                    Los archivos JSON que subes para generar estructuras de proyectos se procesan exclusivamente en tu navegador. No se envían a ningún servidor y se eliminan de la memoria cuando cierras la pestaña.
+                </p>
+                
+                <h3 class="modal-title" style="font-size: 18px; margin-top: 20px;">Seguridad</h3>
+                <p class="modal-text">
+                    Implementamos las siguientes medidas de seguridad:
+                </p>
+                <ul class="modal-list">
+                    <li>Todo el procesamiento ocurre localmente</li>
+                    <li>No se almacenan datos sensibles</li>
+                    <li>Validación de entrada para prevenir errores</li>
+                    <li>Protección contra scripts maliciosos</li>
+                </ul>
+                
+                <h3 class="modal-title" style="font-size: 18px; margin-top: 20px;">Cambios en esta Política</h3>
+                <p class="modal-text">
+                    Podemos actualizar esta Política de Privacidad ocasionalmente. Te notificaremos sobre cambios significativos publicando la nueva política en esta página.
+                </p>
+                
+                <div class="contact-info">
+                    <div class="contact-title">Contacto</div>
+                    <p class="modal-text" style="margin-bottom: 8px;">
+                        Si tienes preguntas sobre esta Política de Privacidad, puedes contactarnos:
+                    </p>
+                    <a href="mailto:vertiljivenson9@gmail.com?subject=Consulta%20Privacidad%20Generator%20Structure" class="contact-email">
+                        vertiljivenson9@gmail.com
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Términos -->
+    <div id="terms-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Términos de Servicio</h2>
+                <button class="modal-close" id="terms-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p class="modal-text">
+                    Bienvenido a Generator Structure. Al utilizar nuestra aplicación web, aceptas los siguientes términos y condiciones.
+                </p>
+                
+                <h3 class="modal-title" style="font-size: 18px; margin-top: 20px;">Uso del Servicio</h3>
+                <p class="modal-text">
+                    Generator Structure es una herramienta web que te permite crear estructuras de proyectos a partir de archivos JSON. Puedes utilizar el servicio de forma gratuita para:
+                </p>
+                <ul class="modal-list">
+                    <li>Generar estructuras de proyectos personales</li>
+                    <li>Crear plantillas para proyectos de equipo</li>
+                    <li>Organizar la arquitectura de tus aplicaciones</li>
+                    <li>Experimentar con diferentes estructuras de archivos</li>
+                </ul>
+                
+                <h3 class="modal-title" style="font-size: 18px; margin-top: 20px;">Responsabilidades del Usuario</h3>
+                <p class="modal-text">
+                    Como usuario, te comprometes a:
+                </p>
+                <ul class="modal-list">
+                    <li>Utilizar el servicio de manera legal y ética</li>
+                    <li>No intentar acceder a áreas no autorizadas del sistema</li>
+                    <li>No utilizar el servicio para actividades maliciosas</li>
+                    <li>Verificar que los archivos JSON no contengan código malicioso</li>
+                </ul>
+                
+                <h3 class="modal-title" style="font-size: 18px; margin-top: 20px;">Limitación de Responsabilidad</h3>
+                <p class="modal-text">
+                    Generator Structure se proporciona "tal cual" sin garantías de ningún tipo. No nos hacemos responsables por:
+                </p>
+                <ul class="modal-list">
+                    <li>Pérdida de datos o archivos</li>
+                    <li>Interrupciones en el servicio</li>
+                    <li>Daños indirectos o consecuentes</li>
+                    <li>Problemas derivados del uso de archivos generados</li>
+                </ul>
+                
+                <h3 class="modal-title" style="font-size: 18px; margin-top: 20px;">Propiedad Intelectual</h3>
+                <p class="modal-text">
+                    Generator Structure y su contenido son propiedad de sus desarrolladores. Puedes utilizar la aplicación libremente, pero no puedes:
+                </p>
+                <ul class="modal-list">
+                    <li>Copiar o distribuir el código fuente sin permiso</li>
+                    <li>Utilizar la marca "Generator Structure" sin autorización</li>
+                    <li>Revender el servicio como propio</li>
+                </ul>
+                
+                <h3 class="modal-title" style="font-size: 18px; margin-top: 20px;">Terminación</h3>
+                <p class="modal-text">
+                    Podemos suspender o terminar tu acceso al servicio si violas estos términos o realizas actividades que consideremos inapropiadas.
+                </p>
+                
+                <div class="contact-info">
+                    <div class="contact-title">Soporte y Contacto</div>
+                    <p class="modal-text" style="margin-bottom: 8px;">
+                        Para reportar problemas, sugerir mejoras o hacer consultas sobre los términos:
+                    </p>
+                    <a href="mailto:vertiljivenson9@gmail.com?subject=Consulta%20Términos%20Generator%20Structure" class="contact-email">
+                        vertiljivenson9@gmail.com
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script>
         // Configuración y estado
@@ -848,7 +1112,17 @@
                 
                 // Mensajes y ejemplos
                 messageContainer: document.getElementById('message-container'),
-                exampleItems: document.querySelectorAll('.example-item')
+                exampleItems: document.querySelectorAll('.example-item'),
+                
+                // Footer links
+                privacyLink: document.getElementById('privacy-link'),
+                termsLink: document.getElementById('terms-link'),
+                
+                // Modals
+                privacyModal: document.getElementById('privacy-modal'),
+                termsModal: document.getElementById('terms-modal'),
+                privacyClose: document.getElementById('privacy-close'),
+                termsClose: document.getElementById('terms-close')
             };
         }
 
@@ -1117,8 +1391,64 @@
                 });
             }
             
+            // Configurar eventos para modales
+            if (elements.privacyLink) {
+                elements.privacyLink.addEventListener('click', openPrivacyModal);
+            }
+            
+            if (elements.termsLink) {
+                elements.termsLink.addEventListener('click', openTermsModal);
+            }
+            
+            if (elements.privacyClose) {
+                elements.privacyClose.addEventListener('click', closePrivacyModal);
+            }
+            
+            if (elements.termsClose) {
+                elements.termsClose.addEventListener('click', closeTermsModal);
+            }
+            
+            // Cerrar modales al hacer clic fuera del contenido
+            window.addEventListener('click', function(event) {
+                if (elements.privacyModal && event.target === elements.privacyModal) {
+                    closePrivacyModal();
+                }
+                if (elements.termsModal && event.target === elements.termsModal) {
+                    closeTermsModal();
+                }
+            });
+            
             // Estado inicial
             updateGenerateButton();
+        }
+
+        // Funciones para modales
+        function openPrivacyModal() {
+            if (elements.privacyModal) {
+                elements.privacyModal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        function closePrivacyModal() {
+            if (elements.privacyModal) {
+                elements.privacyModal.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+        }
+
+        function openTermsModal() {
+            if (elements.termsModal) {
+                elements.termsModal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        function closeTermsModal() {
+            if (elements.termsModal) {
+                elements.termsModal.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
         }
 
         // Funciones de tabs
